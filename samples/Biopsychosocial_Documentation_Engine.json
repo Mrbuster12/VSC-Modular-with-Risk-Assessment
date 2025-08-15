@@ -1,0 +1,141 @@
+{
+    "domains": {
+        "psychiatric_symptoms": {
+            "prompt": "Select primary DSM Cluster and specifier based on clinical interview:",
+            "cluster": [
+                "Mood Disorders",
+                "Anxiety Disorders",
+                "Trauma-Related Disorders",
+                "Substance Use Disorders",
+                "Personality Disorders"
+            ],
+            "specifiers": {
+                "Mood Disorders": [
+                    "Major Depressive Episode",
+                    "Bipolar I",
+                    "Bipolar II",
+                    "Persistent Depressive Disorder"
+                ],
+                "Anxiety Disorders": [
+                    "Generalized Anxiety Disorder",
+                    "Panic Disorder",
+                    "Social Anxiety",
+                    "Specific Phobia"
+                ],
+                "Trauma-Related Disorders": [
+                    "PTSD (Combat)",
+                    "PTSD (Abuse)",
+                    "Complex PTSD",
+                    "Acute Stress Disorder"
+                ],
+                "Substance Use Disorders": [
+                    "Alcohol Use Disorder",
+                    "Opioid Use Disorder",
+                    "Stimulant Use Disorder"
+                ],
+                "Personality Disorders": [
+                    "Borderline",
+                    "Narcissistic",
+                    "Avoidant",
+                    "Antisocial"
+                ]
+            },
+            "bandersnatch_flags": [
+                "guarded",
+                "dysregulated",
+                "resigned",
+                "hypervigilant"
+            ]
+        },
+        "emotional_functioning": {
+            "prompt": "Rate emotional regulation, insight, and self-perception.",
+            "bandersnatch_reflections": [
+                "Client minimizes emotional impact",
+                "Client shows reactive mood shifts",
+                "Client demonstrates high shame or internalized blame",
+                "Client appears emotionally numbed or flat"
+            ],
+            "risk_flags": [
+                "emotional lability",
+                "lack of insight",
+                "shame-based beliefs"
+            ]
+        },
+        "trauma_history": {
+            "prompt": "Identify types of trauma and age of first exposure.",
+            "categories": [
+                "Neglect",
+                "Physical Abuse",
+                "Sexual Abuse",
+                "Combat",
+                "Witnessed Violence",
+                "Other"
+            ],
+            "bandersnatch_reflections": [
+                "Client is vague or evasive when discussing past trauma",
+                "Client becomes visibly distressed or dissociative",
+                "Client intellectualizes events with no affect",
+                "Client over-discloses with no emotional regulation"
+            ],
+            "risk_flags": [
+                "C-PTSD",
+                "Complex grief",
+                "Avoidant processing"
+            ]
+        },
+        "substance_use": {
+            "prompt": "Document current and past substance use patterns.",
+            "categories": [
+                "Alcohol",
+                "Opioids",
+                "Cocaine/Crack",
+                "Methamphetamines",
+                "Marijuana",
+                "Benzodiazepines",
+                "Polysubstance"
+            ],
+            "insight_level": [
+                "None",
+                "Partial",
+                "Full"
+            ],
+            "flags": [
+                "Cravings",
+                "Relapse history",
+                "Medication-assisted treatment",
+                "Court-mandated"
+            ]
+        },
+        "social_support": {
+            "prompt": "Assess level of connection, isolation, and support systems.",
+            "indicators": [
+                "Supportive family",
+                "Isolated",
+                "Peer support available",
+                "Unstable housing",
+                "Employment instability"
+            ],
+            "bandersnatch_reflections": [
+                "Client expresses hopelessness about support",
+                "Client shifts focus from personal to external blame",
+                "Client over-idealizes one relationship"
+            ],
+            "risk_flags": [
+                "Risk of disengagement",
+                "Codependency",
+                "Housing risk"
+            ]
+        },
+        "clinical_summary_logic": {
+            "summary_format": "Client presents with {specifier} under {cluster} with impairment rated as {functioning}. Emotional regulation marked by {emotional_flags}. Trauma markers include {trauma_flags}. Substance use flagged: {substance_flags}. Social support indicators: {support_flags}. Bandersnatch indicators point toward: {bandersnatch_tags}.",
+            "treatment_routing": {
+                "Bipolar I": "Mood Stabilization Track",
+                "PTSD (Combat)": "Trauma Track - Combat",
+                "PTSD (Abuse)": "Trauma Track - Abuse",
+                "Borderline": "DBT Track",
+                "Alcohol Use Disorder": "Relapse Prevention Track",
+                "C-PTSD": "Complex Trauma Stabilization"
+            }
+        }
+    }
+}

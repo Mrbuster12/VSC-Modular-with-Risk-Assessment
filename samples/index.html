@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Biopsychosocial Assessment Engine</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 10px; max-width: 900px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        select, button, textarea { width: 100%; margin: 15px 0; padding: 12px; border-radius: 6px; border: 1px solid #ccc; }
+        .output { background: #eef; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        label { font-weight: bold; display: block; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Biopsychosocial Intake Module</h1>
+
+    <label for="presentingIssue">Presenting Issue:</label>
+    <select id="presentingIssue">
+        <option value="">-- Select --</option>
+        <option value="depression">Depression</option>
+        <option value="anxiety">Anxiety</option>
+        <option value="trauma">Trauma/PTSD</option>
+        <option value="substance">Substance Use</option>
+    </select>
+
+    <label for="stressors">Primary Stressors:</label>
+    <select id="stressors">
+        <option value="">-- Select --</option>
+        <option value="relationships">Relationship Conflict</option>
+        <option value="grief">Recent Loss</option>
+        <option value="job">Job Stress/Unemployment</option>
+        <option value="legal">Legal Issues</option>
+    </select>
+
+    <label for="functioning">Level of Daily Functioning:</label>
+    <select id="functioning">
+        <option value="">-- Select --</option>
+        <option value="intact">Intact</option>
+        <option value="mild">Mild Impairment</option>
+        <option value="moderate">Moderate Impairment</option>
+        <option value="severe">Severe Impairment</option>
+    </select>
+
+    <label for="notes">Clinician Notes:</label>
+    <textarea id="notes" rows="4" placeholder="Type any additional observations here..."></textarea>
+
+    <button onclick="generateSummary()">🧾 Generate Diagnostic Summary</button>
+
+    <div id="summaryOutput" class="output" style="display:none;"></div>
+</div>
+
+<script>
+function generateSummary() {
+    const issue = document.getElementById("presentingIssue").value;
+    const stressor = document.getElementById("stressors").value;
+    const functioning = document.getElementById("functioning").value;
+    const notes = document.getElementById("notes").value.trim();
+
+    let summary = "<h3>Diagnostic Summary</h3>";
+    if (issue) summary += `<p><strong>Presenting Issue:</strong> ${issue}</p>`;
+    if (stressor) summary += `<p><strong>Primary Stressor:</strong> ${stressor}</p>`;
+    if (functioning) summary += `<p><strong>Daily Functioning:</strong> ${functioning}</p>`;
+    if (notes) summary += `<p><strong>Clinician Notes:</strong> ${notes}</p>`;
+
+    summary += "<p><em>This intake summary will be used to generate a treatment plan recommendation in the next step.</em></p>";
+
+    const output = document.getElementById("summaryOutput");
+    output.innerHTML = summary;
+    output.style.display = "block";
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clinical Documentation Portal</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 40px; }
+    h1 { margin-bottom: 8px; }
+    p.lead { color:#444; margin-top:0 }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .card { border: 1px solid #e3e3e3; border-radius: 12px; padding: 16px; background: #fff; }
+    .card h2 { margin: 0 0 8px 0; font-size: 18px; }
+    .card p { margin: 0 0 12px 0; color: #555; }
+    .btn { display: inline-block; padding: 10px 14px; border-radius: 10px; border: 1px solid #ccc; text-decoration: none; }
+    .btn:hover { background: #f6f6f6; }
+    footer { margin-top: 40px; color: #666; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Clinical Documentation Portal</h1>
+  <p class="lead">Each tool runs as its own page so changes never break the others.</p>
+  <div class="grid">
+    <div class="card">
+      <h2>DSM → CTC Assessment (Core)</h2>
+      <p>Real-time Care Tier from DSM & Risk. Minimal, no extras.</p>
+      <a class="btn" href="assessment-core/index.html">Open</a>
+    </div>
+    <div class="card">
+      <h2>Mental Status Exam (MSE)</h2>
+      <p>Standalone MSE with export.</p>
+      <a class="btn" href="mse/index.html">Open</a>
+    </div>
+    <div class="card">
+      <h2>Treatment Plan Generator</h2>
+      <p>Select tier, goals, interventions; export plan.</p>
+      <a class="btn" href="treatment-plan/index.html">Open</a>
+    </div>
+    <div class="card">
+      <h2>Biopsychosocial (Your Build)</h2>
+      <p>SAFE_MASTER_A_HOTFIX_20250813_030527 integrated here.</p>
+      <a class="btn" href="psychosocial/index.html">Open</a>
+    </div>
+  </div>
+  <footer>Netlify-ready static site.</footer>
+<script src="/shared/bridge.js"></script>
+<script src="/shared/session-store.js"></script>
+<script src="/shared/autodoc-schema.js"></script>
+<script src="/shared/ctc-publisher-ctcmod.js"></script>
+<script src="/shared/toolbar-inject.js"></script>
+<script src="/shared/bridge.js"></script>
+<script src="/shared/session-store.js"></script>
+<script src="/shared/autodoc-schema.js"></script>
+<script src="/shared/mse-consumer-ctcmod.js"></script>
+<script src="/shared/toolbar-inject.js"></script>
+<script src="/shared/bridge.js"></script>
+<script src="/shared/session-store.js"></script>
+<script src="/shared/autodoc-schema.js"></script>
+<script src="/shared/tp-consumer-ctcmod.js"></script>
+<script src="/shared/toolbar-inject.js"></script>
+</body>
+</html>

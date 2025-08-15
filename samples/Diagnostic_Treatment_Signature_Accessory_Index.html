@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Biopsychosocial Documentation Accessory Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; }
+        .container { background: white; padding: 30px; border-radius: 10px; max-width: 1000px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        pre { background: #eef; padding: 20px; border-radius: 8px; white-space: pre-wrap; word-wrap: break-word; }
+        canvas { border: 1px solid #ccc; background: #fff; }
+        button { padding: 10px 15px; margin-top: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Session Diagnostic Review & Signature Panel</h1>
+
+    <h2>📋 Diagnostic Summary</h2>
+    <div id="summaryOutput"><em>Loading summary...</em></div>
+
+    <h2>🧾 Treatment Plan Track</h2>
+    <div id="treatmentOutput"><em>Loading treatment plan...</em></div>
+
+    <h2>✍️ Signature Capture</h2>
+    <p>Please sign below to confirm review of session content:</p>
+    <canvas id="signatureCanvas" width="600" height="200"></canvas><br/>
+    <button onclick="clearCanvas()">Clear</button>
+    <button onclick="saveSignature()">Save Signature</button>
+    <div id="sigData"></div>
+</div>
+
+<script>
+const summary = {
+    "client_id": "client-001",
+    "date": "2025-07-22",
+    "cluster": "Trauma-Related Disorders",
+    "specifier": "PTSD (Abuse)",
+    "functioning_level": "Moderate",
+    "bandersnatch_behavioral_flags": ["guarded", "resigned"],
+    "risk_factors": ["emotional numbing", "avoidant processing"],
+    "emotional_functioning": "Client presents with emotional restriction and hypervigilance, with visible tension when discussing interpersonal dynamics.",
+    "trauma_history_flags": ["childhood abuse", "persistent triggers", "recurrent nightmares"],
+    "substance_use_disclosure": {
+        "history": "Client reports alcohol use during periods of high distress.",
+        "insight_level": "Partial"
+    },
+    "social_support": {
+        "housing_status": "Stable",
+        "family_connection": "Distant",
+        "primary_support": "Online recovery community"
+    },
+    "clinical_summary": "Client meets criteria for PTSD related to early abuse, with moderate functional impairment and ongoing emotional numbing. Bandersnatch reflections indicate guardedness and resignation, supporting a trauma-focused treatment approach. Insight into emotional and relational patterns is emerging. Recovery support is present but inconsistent."
+};
+
+const treatmentPlan = {
+    "track": "Trauma Track - Abuse",
+    "goals": [
+        "Process traumatic memories and restore emotional safety.",
+        "Strengthen boundaries and reduce trauma-related triggers."
+    ],
+    "objectives": [
+        "Client will identify 5 trauma-related triggers and describe emotional responses.",
+        "Client will complete a weekly reflection on use of coping tools."
+    ],
+    "interventions": [
+        "Clinician will utilize trauma-focused CBT and grounding techniques.",
+        "Clinician will assign guided imagery and somatic regulation exercises."
+    ]
+};
+
+document.getElementById("summaryOutput").innerHTML = "<pre>" + JSON.stringify(summary, null, 2) + "</pre>";
+document.getElementById("treatmentOutput").innerHTML = "<pre>" + JSON.stringify(treatmentPlan, null, 2) + "</pre>";
+
+// Signature logic
+const canvas = document.getElementById('signatureCanvas');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+
+canvas.addEventListener("mousedown", () => { drawing = true; });
+canvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
+canvas.addEventListener("mousemove", draw);
+
+function draw(e) {
+    if (!drawing) return;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#222";
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById('sigData').innerHTML = "";
+}
+
+function saveSignature() {
+    const dataURL = canvas.toDataURL();
+    document.getElementById('sigData').innerHTML = "<p><strong>Signature Saved:</strong></p><img src='" + dataURL + "' width='300'/>";
+}
+</script>
+</body>
+</html>

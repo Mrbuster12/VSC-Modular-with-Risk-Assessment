@@ -1,0 +1,42 @@
+{
+    "session_id": "session-001",
+    "client_id": "client-001",
+    "date": "2025-07-22",
+    "diagnostic_summary": {
+        "cluster": "Trauma-Related Disorders",
+        "specifier": "PTSD (Abuse)",
+        "functioning_level": "Moderate",
+        "flags": [
+            "guarded",
+            "resigned",
+            "emotional numbing",
+            "avoidant processing"
+        ]
+    },
+    "treatment_plan": {
+        "track": "Trauma Track - Abuse",
+        "goals": [
+            "Process traumatic memories and restore emotional safety.",
+            "Strengthen boundaries and reduce trauma-related triggers."
+        ],
+        "objectives": [
+            "Client will identify 5 trauma-related triggers and describe emotional responses.",
+            "Client will complete a weekly reflection on use of coping tools."
+        ],
+        "interventions": [
+            "Clinician will utilize trauma-focused CBT and grounding techniques.",
+            "Clinician will assign guided imagery and somatic regulation exercises."
+        ]
+    },
+    "dap_note": {
+        "D": "Client presented with restricted affect and described persistent flashbacks tied to early abuse. Hypervigilance was observed.",
+        "A": "PTSD (Abuse) confirmed. Moderate impairment across interpersonal and emotional domains. Emotional restriction and guardedness present.",
+        "P": "Continue with trauma-focused CBT. Assign reflection and breathing tools. Follow up in 1 week."
+    },
+    "signature": {
+        "signed": true,
+        "signed_by": "client-001",
+        "timestamp": "2025-07-22T11:45:00Z",
+        "signature_format": "data:image/png;base64,..."
+    }
+}

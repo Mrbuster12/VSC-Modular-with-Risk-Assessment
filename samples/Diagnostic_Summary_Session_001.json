@@ -1,0 +1,31 @@
+{
+    "client_id": "client-001",
+    "date": "2025-07-22",
+    "cluster": "Trauma-Related Disorders",
+    "specifier": "PTSD (Abuse)",
+    "functioning_level": "Moderate",
+    "bandersnatch_behavioral_flags": [
+        "guarded",
+        "resigned"
+    ],
+    "risk_factors": [
+        "emotional numbing",
+        "avoidant processing"
+    ],
+    "emotional_functioning": "Client presents with emotional restriction and hypervigilance, with visible tension when discussing interpersonal dynamics.",
+    "trauma_history_flags": [
+        "childhood abuse",
+        "persistent triggers",
+        "recurrent nightmares"
+    ],
+    "substance_use_disclosure": {
+        "history": "Client reports alcohol use during periods of high distress.",
+        "insight_level": "Partial"
+    },
+    "social_support": {
+        "housing_status": "Stable",
+        "family_connection": "Distant",
+        "primary_support": "Online recovery community"
+    },
+    "clinical_summary": "Client meets criteria for PTSD related to early abuse, with moderate functional impairment and ongoing emotional numbing. Bandersnatch reflections indicate guardedness and resignation, supporting a trauma-focused treatment approach. Insight into emotional and relational patterns is emerging. Recovery support is present but inconsistent."
+}

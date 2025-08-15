@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DSM → CTC Assessment (Core)</title>
+  <style>
+    :root { --gap: 12px; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 20px; }
+    h1 { margin: 8px 0 16px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+    .col { display: flex; flex-direction: column; gap: 8px; }
+    label { font-weight: 600; }
+    textarea, select, input[type="text"] { width: 100%; min-height: 110px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    select { min-height: auto; }
+    .pillbar { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill { border: 1px solid #aaa; padding: 6px 10px; border-radius: 20px; cursor: pointer; user-select: none; }
+    .panel { border: 1px solid #e3e3e3; border-radius: 12px; background: #fafafa; padding: 12px; }
+    pre { white-space: pre-wrap; }
+    .actions { display: flex; gap: 10px; margin-top: 10px; }
+    .btn { padding: 10px 12px; border: 1px solid #ccc; border-radius: 10px; background: #fff; cursor: pointer; }
+    .btn:hover { background: #f6f6f6; }
+    footer { margin-top: 20px; font-size: 12px; color: #666; }
+  </style>
+</head>
+<body data-hub="/index.html">
+  <h1>DSM → CTC Assessment (Core)</h1>
+
+  <div class="row">
+    <div class="col">
+      <label for="dsmBox">DSM (specifiers or text)</label>
+      <div class="pillbar" id="specBar">
+        <span class="pill" data-term="suicidal ideation">Suicidal Ideation</span>
+        <span class="pill" data-term="overdosed on fentanyl">Overdose</span>
+        <span class="pill" data-term="hospitalized last night">Hospitalized</span>
+        <span class="pill" data-term="psychosis">Psychosis</span>
+        <span class="pill" data-term="with dissociative symptoms">Dissociative</span>
+      </div>
+      <textarea id="dsmBox" placeholder="Type or click specifiers above..."></textarea>
+
+      <label for="riskBox">Risk / Narrative</label>
+      <textarea id="riskBox" placeholder="e.g., client reports suicidal ideation, no safety plan..."></textarea>
+
+      <div class="row">
+        <div class="col">
+          <label for="funcSel">Functioning</label>
+          <select id="funcSel">
+            <option value="">—</option>
+            <option>Mild</option>
+            <option>Moderate</option>
+            <option>Severe</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Safety Plan</label>
+          <div>
+            <label><input type="radio" name="sp" value="Yes" checked> Yes</label>
+            <label style="margin-left:12px;"><input type="radio" name="sp" value="No"> No</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel">
+        <strong>Care Tier Monitor</strong>
+        <pre id="ctcPanel">— Care Tier Recommendation —
+Awaiting input…</pre>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <strong>Session Output (Unified)</strong>
+        <pre id="unifiedOut">Timestamp: </pre>
+        <div class="actions">
+          <button class="btn" id="downloadBtn">Download Note (.txt)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Minimal build: DSM & Risk → real-time CTC. No extras.</footer>
+
+<script>
+(function(){
+  const State = { dsmText:"", riskText:"", functioning:"", safetyPlan:"Yes", lastSnap:"" };
+  const dsm = document.getElementById('dsmBox');
+  const risk = document.getElementById('riskBox');
+  const func = document.getElementById('funcSel');
+  const spRadios = Array.from(document.querySelectorAll('input[name="sp"]'));
+  const ctcPanel = document.getElementById('ctcPanel');
+  const unified = document.getElementById('unifiedOut');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  document.getElementById('specBar').addEventListener('click', (e)=>{
+    const term = e.target?.getAttribute?.('data-term');
+    if (!term) return;
+    const val = dsm.value || "";
+    const re = new RegExp("\\b" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i");
+    if (!re.test(val)) dsm.value = (val + " " + term).trim();
+    schedule();
+  });
+
+  function scoreCTC(s){
+    let ARS = 6, ELI = 4, PDL = 0, BSI = 0, CBF = 0, RES = 0, ERQ = 0;
+    const T = (s.dsmText + " " + s.riskText).toLowerCase();
+    const bump = (re, amt)=>{ if (re.test(T)) ARS = Math.max(ARS, Math.min(100, ARS + amt)); };
+    bump(/\bsuicid|self-?harm|kill myself|hurt(ing)? myself\b/i, 60);
+    bump(/\boverdose|overdosed|fentanyl|narcan\b/i, 50);
+    bump(/\bhospital|hospitalized|icu|er\b/i, 30);
+    bump(/\bpsychotic|psychosis|manic\b/i, 40);
+    bump(/\bdissociative\s+symptoms\b/i, 10);
+    if (s.safetyPlan === "No") ARS += 20;
+    if (/(severe|marked|unable)/i.test(s.functioning||"")) ARS += 20;
+
+    const composite = ARS*1.2 + ELI + PDL*0.9 + BSI + CBF*0.8 + RES*0.8 + ERQ;
+    const tier = composite>=520?'CTC-5': composite>=420?'CTC-4': composite>=320?'CTC-3': composite>=220?'CTC-2':'CTC-1';
+    return { tier, composite: Math.round(composite), ARS, ELI, PDL, BSI, CBF, RES, ERQ };
+  }
+
+  function render(out){
+    const ts = new Date().toLocaleString();
+    const panelText = [
+      "— Care Tier Recommendation —",
+      "Tier: " + out.tier,
+      "Composite: " + out.composite,
+      "Drivers: ARS:" + out.ARS + ", ELI:" + out.ELI + ", PDL:" + out.PDL + ", BSI:" + out.BSI + ", CBF:" + out.CBF + ", RES:" + out.RES + ", ERQ:" + out.ERQ,
+      "Timestamp: " + ts
+    ].join("\n");
+    if (ctcPanel.textContent !== panelText) ctcPanel.textContent = panelText;
+
+    const unifiedText = [
+      "Timestamp: " + ts,
+      "DSM: " + (State.dsmText || "—"),
+      "Risk: " + (State.riskText || "—"),
+      "Functioning: " + (State.functioning || "—"),
+      "Safety Plan: " + State.safetyPlan,
+      "",
+      "=== Care Tier Classification ===",
+      "CTC Tier: " + out.tier,
+      "Composite: " + out.composite,
+      "Drivers → ARS:" + out.ARS + ", ELI:" + out.ELI + ", PDL:" + out.PDL + ", BSI:" + out.BSI + ", CBF:" + out.CBF + ", RES:" + out.RES + ", ERQ:" + out.ERQ
+    ].join("\n");
+    if (unified.textContent !== unifiedText) unified.textContent = unifiedText;
+  }
+
+  let raf = 0;
+  function snapshot(){
+    return JSON.stringify({ d: dsm.value, r: risk.value, f: func.value, sp: spRadios.find(r=>r.checked)?.value });
+  }
+  function schedule(){
+    const snap = snapshot();
+    if (snap === State.lastSnap) return;
+    State.lastSnap = snap;
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(()=>{
+      State.dsmText = dsm.value || "";
+      State.riskText = risk.value || "";
+      State.functioning = func.value || "";
+      State.safetyPlan = spRadios.find(r=>r.checked)?.value || "Yes";
+      const out = scoreCTC(State);
+      render(out);
+    });
+  }
+
+  dsm.addEventListener('input', schedule);
+  risk.addEventListener('input', schedule);
+  func.addEventListener('change', schedule);
+  spRadios.forEach(r => r.addEventListener('change', schedule));
+
+  // Download only the Unified output
+  downloadBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const text = (unified.textContent || "").trim();
+    const blob = new Blob([text + "\n"], {type: "text/plain;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "Session_Note_" + new Date().toISOString().replace(/[:.]/g,"-") + ".txt";
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  schedule();
+})();
+</script>
+
+<script src="/shared/bridge.js"></script>
+<script src="/shared/bridge-tools.js"></script>
+<script src="/shared/toolbar-inject.js"></script><script src="/shared/key-propagation.js?v=2"></script>
+<script src="/assessment-core/bridge-producer.js?v=2"></script>
+<script src="/assessment-core/add-return-to-hub.js?v=2"></script><script type="module" src="/assessment-core/scoring-bridges/tier9-match.js"></script>
+<script src="/assessment-core/scoring-bridges/tier9-escalation.js"></script>
+<script src="/assessment-core/scoring-bridges/bridge-producer-tier9-patch.js"></script>
+
+
+<script type="module" src="/shared/scorer-client.js"></script>
+<script type="module" src="/assessment-core/bridge-consumer.js"></script>
+<script src="/shared/bridge.js"></script>
+<script src="/shared/session-store.js"></script>
+<script src="/shared/autodoc-schema.js"></script>
+<script src="/shared/ctc-publisher-ctcmod.js"></script>
+<script src="/shared/toolbar-inject.js"></script>
+</body>
+</html>
